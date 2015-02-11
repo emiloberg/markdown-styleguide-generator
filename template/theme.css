@@ -1,0 +1,123 @@
+#styleguide {
+    float: left;
+    width: 80%;
+}
+
+#styleguide .section {
+    display: none;
+    margin-bottom: 2em;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.43);
+    -moz-box-shadow:    2px 2px 5px 0px rgba(50, 50, 50, 0.43);
+    box-shadow:         2px 2px 5px 0px rgba(50, 50, 50, 0.43);
+}
+
+#styleguide .result, 
+#styleguide .comment {
+    padding: 1em;
+    border: 1px solid #ddd;
+}
+
+#styleguide .result {
+    border-top: none;
+}
+
+#styleguide .comment {
+    background-color: rgb(245, 245, 245);
+}
+
+#styleguide .section .comment code {
+    color: #3fbead;
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    font-size: 13px;
+}
+
+#styleguide .markup {
+    border: 1px solid #ddd;
+    border-top: none;    
+}
+
+#styleguide code,
+#styleguide pre {
+    border: none;
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    font-size: 13px;
+    line-height: 20px;
+    direction: ltr;
+    text-align: left;
+    white-space: pre-wrap;
+    word-spacing: normal;
+    margin: 0;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+}
+
+
+/* menu */
+#styleguide-menu {
+    width: calc(20% - 1em - 2px);
+    float: left;
+    margin-right: 1em;
+    padding: 1em 0;
+
+    border: 1px solid #ddd;
+    -webkit-box-shadow: 2px 2px 5px 0px rgba(50, 50, 50, 0.43);
+    -moz-box-shadow:    2px 2px 5px 0px rgba(50, 50, 50, 0.43);
+    box-shadow:         2px 2px 5px 0px rgba(50, 50, 50, 0.43);
+}
+
+#styleguide-menu .submenu {
+    display: none;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+#styleguide-menu .submenu.on{
+    display: block;
+}
+
+#styleguide-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#styleguide-menu li {
+    padding: 0;
+    margin: 0;
+}
+
+
+
+#styleguide-menu a {
+    display: block;
+    width: calc(100% - 2em + 2px);
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.87);
+
+}
+
+#styleguide-menu ul ul a {
+    padding: 0.3em 1em 0.3em 2em;
+    width: calc(100% - 3em + 2px);
+}
+
+#styleguide-menu a:visited,
+#styleguide-menu a:hover,
+#styleguide-menu a:active {
+    display: block;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+#styleguide-menu a:hover {
+    background-color: rgba(250, 255, 70, 0.3);
+}
+
+#styleguide-menu a.on {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+

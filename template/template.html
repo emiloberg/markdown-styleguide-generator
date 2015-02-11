@@ -1,0 +1,87 @@
+{{> theme}}
+{{> highlight}}
+{{> jquery}}
+
+<script>
+    var j = jQuery.noConflict();
+    j(function() {
+
+        // Show section in Styleguide
+        j('#styleguide .section[data-section="' + j('#styleguide-menu a').first().data('section') + '"]').show();
+
+        // Click on link with subheadings
+        j('#styleguide-menu .submenulink').click(function(event) {
+            event.preventDefault();
+            var jqCurSubmenu = j('[data-submenu="' + j(this).data('section') + '"]');
+            var isCurSubmenuOn = jqCurSubmenu.hasClass('on');
+            j('#styleguide-menu .on').removeClass('on');
+            if (!isCurSubmenuOn) {
+                jqCurSubmenu.addClass('on');
+                j(this).addClass('on');
+            }
+            showSection(j(this).data('section'));
+        });
+
+        // Click on link without subheadings
+        j('#styleguide-menu .sectionlink').click(function(event) {
+            event.preventDefault();
+            j('#styleguide-menu .on').removeClass('on');
+            j(this).addClass('on');
+            showSection(j(this).data('section'));
+        });
+
+        // Show/Hide sections
+        function showSection(section) {
+            j('#styleguide .section').hide();
+            var jqCurSections = j('#styleguide .section[data-section="' + section + '"]');
+            jqCurSections.show();
+        }
+    });
+</script>
+
+<div id="styleguide-menu">
+	<ul>
+	{{#each menu}}
+		<li>
+			{{#if headings.0.name}}
+                <a class="submenulink" href="#" data-section="{{name}}">{{name}}</a>
+                <ul class="submenu" data-submenu="{{../name}}">
+                {{#each headings}}
+                    <li><a href="#{{id}}">{{name}}</a></li>
+                {{/each}}
+                </ul>
+			{{/if}}
+            {{#unless headings.0.name}}
+                <a class="sectionlink" href="#" data-section="{{name}}">{{name}}</a>
+            {{/unless}}
+		</li>
+	{{/each}}
+	</ul>
+</div>
+
+<div id="styleguide">
+	{{#each sections}}
+		<div class="section" id="{{id}}" data-section="{{section}}" data-heading="{{heading}}">
+
+            <div class="comment">
+                <h1>{{section}}{{#if heading}}/{{heading}}{{/if}}</h1>
+                {{{comment}}}
+            </div>
+
+            {{#if code}}
+                <div class="result">
+                    {{{code}}}
+                </div>
+            {{/if}}
+
+            {{#if markup}}
+                <div class="markup hljs">
+<pre>
+{{{markup}}}
+</pre>
+                </div>
+            {{/if}}
+
+		</div>
+	{{/each}}
+</div>

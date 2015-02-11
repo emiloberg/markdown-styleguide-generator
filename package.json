@@ -1,0 +1,31 @@
+{
+  "name": "markdown-styleguide-generator",
+  "version": "1.0.0",
+  "description": "Will search all your (s)css files for markdown and generate a single page html styleguide",
+  "main": "index.js",
+  "author": "Emil Oberg <emil.oberg@monator.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emiloberg/markdown-styleguide-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/emiloberg/markdown-styleguide-generator/issues"
+  },
+  "homepage": "https://github.com/emiloberg/markdown-styleguide-generator",
+  "keywords": [
+    "styleguide",
+    "markdown",
+    "generator",
+    "sass",
+    "md"
+  ],  
+  "license": "GPL",
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "cheerio": "^0.18.0",
+    "fs-extra": "^0.16.3",
+    "handlebars": "^3.0.0",
+    "marked": "^0.3.3",
+    "walk": "^2.3.9"
+  }
+}
