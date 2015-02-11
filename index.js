@@ -8,35 +8,132 @@ var fs = require('fs-extra');
 var walk = require('walk');
 var marked = require('marked');
 var chalk = require('chalk');
-var hl = require("highlight.js");
+var hl = require('highlight.js');
+var path = require('path');
 
 var error = chalk.bold.red;
 var good = chalk.green;
 var info = chalk.yellow;
 
+var moduleDir = path.dirname(process.mainModule.filename);
+
 var options = {
 	sgComment: 'SG',
-	srcFolder: '/Users/emiloberg/code/ehp/ehealth-portal-theme/src/main/webapp',
-	outputFile: '/Users/emiloberg/code/ehp/ddm/journal/templates/DEV-Styleguide.ftl',
-
-	jqFile: '/Users/emiloberg/code/tools/styleguide-generator/template/jquery.js',
-	templateFile: '/Users/emiloberg/code/tools/styleguide-generator/template/template.html',
-	themeFile: '/Users/emiloberg/code/tools/styleguide-generator/template/theme.css',
-	highlightFile: './node_modules/highlight.js/styles/github.css',
-
+	srcFolder: process.cwd(),
+	outputFile: path.join(process.cwd(), '/styleguide/dist/styleguide.html'),
+	templateFile: path.join(moduleDir, '/template/template.html'),
+	themeFile: path.join(moduleDir, '/template/theme.css'),
+	highlightFolder: path.join(moduleDir, '/node_modules/highlight.js/styles'),
+	highlightStyle: 'github',
+	excludeDirs: ['target', 'node_modules'],
 	fileExtensions: {
-			scss: true,
-			css: true
-		}
+		scss: true,
+		css: true
+	},
+	walkerOptions: {
+		followLinks: false
+	},
+	jqFile: path.join(moduleDir, '/template/jquery.js')
 };
 
 var sgUniqueIdentifier = 'sg-by-emiloberg';
-var scssFilesContent = [];
+
+var args = process.argv.slice(2);
+
+if(args.length > 0) {
+	var curArg = args[0].toLowerCase();
+	if(curArg === 'init') { // Let user create a new configuration file.
+		var configFilePath = path.join(process.cwd(), '.styleguide');
+		var existingConfig;
+		try {
+			existingConfig = fs.readFileSync(configFilePath, 'utf8');
+		} catch(err) {
+			fs.writeFileSync(configFilePath, JSON.stringify(options,null,'\t'));
+			console.log(good('\nAll done!'));
+			console.log('Created configuration file: ' + good(configFilePath));
+		}
+		if(existingConfig !== undefined) {
+			console.log(error('\nConfiguration file \'.styleguide\' already exists in this directory!'));
+			console.log('Edit that file, or delete it and run \'init\' again if you want to create a new configuration file.');
+		}
+		process.exit(0);
+	} else { // Show help
+		console.log('');
+		console.log(chalk.blue('     _____ _         _                  _     _      '));
+		console.log(chalk.blue('    / ____| |       | |                (_)   | |     '));
+		console.log(chalk.blue('   | (___ | |_ _   _| | ___  __ _ _   _ _  __| | ___ '));
+		console.log(chalk.blue('    \\___ \\| __| | | | |/ _ \\/ _` | | | | |/ _` |/ _ \\'));
+		console.log(chalk.blue('    ____) | |_| |_| | |  __/ (_| | |_| | | (_| |  __/'));
+		console.log(chalk.blue('   |_____/ \\__|\\__, |_|\\___|\\__, |\\__,_|_|\\__,_|\\___|'));
+		console.log(chalk.blue('                __/ |        __/ |                   '));
+		console.log(chalk.blue('               |___/        |___/                    '));
+		console.log('');
+		console.log('   ' + info('styleguide') + '         Generate styleguide');
+		console.log('   ' + info('styleguide init') + '    Create a new configuration file in the current directory');
+		console.log('   ' + info('styleguide help') + '    Show this so called help ');
+		console.log('');
+		console.log('   More help at');
+		console.log('      https://github.com/emiloberg/markdown-styleguide-generator');
+		console.log('');
+		process.exit(0);
+	}
+}
+
+/**
+ * Read configuration
+ */
+try {
+	var customOptions = fs.readFileSync('.styleguide', 'utf8');
+} catch(err) {
+	console.log('No ".styleguide" configuration file found in current directory, using defaults');
+}
+if (customOptions !== undefined) {
+	try {
+		customOptions = JSON.parse(customOptions);
+	} catch(err) {
+		console.log(error('Found ".styleguide", but could not read - is it valid json?'));
+		console.dir(err);
+		process.exit(1);
+	}
+	console.log(good('Read configuration file: ') + info('.styleguide'));
+	options = mergeObjects(options, customOptions);
+}
+// Add walker exclude directories if set
+if(Object.prototype.toString.call(options.excludeDirs) === '[object Array]') {
+	options.walkerOptions.filters = options.excludeDirs;
+}
+
+/**
+ * Read template/them files.
+ */
+try {
+	var templateSource = fs.readFileSync(options.templateFile, 'utf8');
+} catch(err) {
+	console.log(error('Could not read template file: ' + options.templateFile));
+	process.exit(1)
+}
+try {
+	var highlightSource = fs.readFileSync(path.join(options.highlightFolder, options.highlightStyle + '.css'), 'utf8');
+} catch(err) {
+	console.log(error('Could not read highlight file: ' + path.join(options.highlightFolder, options.highlightStyle + '.css')));
+	process.exit(1)
+}
+try {
+	var themeSource = fs.readFileSync(options.themeFile, 'utf8');
+} catch(err) {
+	console.log(error('Could not read theme file: ' + options.themeFile));
+	process.exit(1)
+}
+try {
+	var jqSource = fs.readFileSync(options.jqFile, 'utf8');
+} catch(err) {
+	console.log(error('Could not read jquery file: ' + options.jqFile));
+	process.exit(1)
+}
 
 
 /**
  * Custom renderer for marked.
- *
  */
 var renderer = new marked.Renderer();
 renderer.heading = function (string, number) {
@@ -62,27 +159,20 @@ marked.setOptions({
 });
 
 
-
-
-
-
 /**
  * Walk the file tree
- *
  */
-var walker = walk.walk(options.srcFolder, {
-	followLinks: false
-});
+var walker = walk.walk(options.srcFolder, options.walkerOptions);
 
 /**
  * Read valid files (default: scss/css), get the Styleguide comments and put into an array
- *
  */
+var scssFilesContent = [];
 walker.on("file", function (root, fileStats, next) {
 	var fileExtension = fileStats.name.substr((~-fileStats.name.lastIndexOf(".") >>> 0) + 2).toLowerCase();
 	if (options.fileExtensions[fileExtension]) {
-		fs.readFile(root + '/' + fileStats.name, 'utf8', function (err, fileContent) {
-			console.log('Reading file: ' + root + '/' + info(fileStats.name));
+		fs.readFile(path.join(root, fileStats.name), 'utf8', function (err, fileContent) {
+			console.log('Reading file: ' + root + ' / ' + info(fileStats.name));
 			if (err) {
 				console.log(error('ERROR!'));
 				console.dir(err);
@@ -90,7 +180,6 @@ walker.on("file", function (root, fileStats, next) {
 			}
 			var pattern = new RegExp('/\\* ' + options.sgComment + '([\\s\\S]*?)\\*/', 'gi');
 			var regResp;
-			var respStr;
 			while ((regResp = pattern.exec(fileContent)) !== null) {
 				scssFilesContent.push(marked(regResp[1]));
 			}
@@ -109,7 +198,6 @@ walker.on("end", function () {
 	var json = convertHTMLtoJSON('<div class="sg-section-' + sgUniqueIdentifier + '">\n' + scssFilesContent.join('</div>\n<div class="sg-section-' + sgUniqueIdentifier + '">\n') + '</div>');
 	var html = doTemplating(json);
 	saveFile(html);
-	//console.log(html);
 });
 
 /**
@@ -126,8 +214,7 @@ function saveFile(html) {
 		}
 		console.log(good('\n\nAll done!'));
 		console.log('Created file: ' + good(options.outputFile));
-	})	
-	
+	});
 }
 
 /**
@@ -137,20 +224,7 @@ function saveFile(html) {
  * @returns {string} html
  */
 function doTemplating(json) {
-	try {
-		var templateSource = fs.readFileSync(options.templateFile, 'utf8');
-		var themeSource = fs.readFileSync(options.themeFile, 'utf8');
-		var highlightSource = fs.readFileSync(options.highlightFile, 'utf8');
-		var jqSource = fs.readFileSync(options.jqFile, 'utf8');
-	}
-	catch(err) {;
-		console.log(error('ERROR!'));
-		console.log(error('Could not read file'));
-		console.log(err);
-		process.exit(1);
-	}
-	
-	//.hljs {
+	// Adding '#styleguide .hljs pre' to highlight css, to override common used styling for 'pre'
 	highlightSource = highlightSource.replace('.hljs {', '#styleguide .hljs pre, .hljs {');
 
 	handlebars.registerPartial("jquery", '<script>\n' + jqSource+ '\n</script>');
@@ -210,10 +284,9 @@ function convertHTMLtoJSON(html) {
 		masterData.sections.push(curSectionData);
 	});
 
-	
+
 	// Sort
 	masterData.sections.sort(function (a, b) {
-
 		if (a.section === b.section) {
 			if (a.heading > b.heading) {
 				return 1;
@@ -232,7 +305,7 @@ function convertHTMLtoJSON(html) {
 			return 0;
 		}
 	});
-	
+
 	// Create menu object
 	var menuObj = {};
 	masterData.sections.forEach(function (section) {
@@ -245,10 +318,27 @@ function convertHTMLtoJSON(html) {
 	Object.keys(menuObj).forEach(function (key) {
 		menuArr.push({name: key, headings: menuObj[key]});
 	});
-
 	masterData.menu = menuArr;
-	
+
 	return masterData;
+}
+
+/**
+ * Merge Objects
+ */
+function mergeObjects(obj1, obj2) {
+	for (var p in obj2) {
+		try {
+			if ( obj2[p].constructor == Object ) {
+				obj1[p] = mergeObjects(obj1[p], obj2[p]);
+			} else {
+				obj1[p] = obj2[p];
+			}
+		} catch(e) {
+			obj1[p] = obj2[p];
+		}
+	}
+	return obj1;
 }
 
 /**
