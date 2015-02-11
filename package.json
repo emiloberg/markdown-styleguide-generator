@@ -27,5 +27,8 @@
     "handlebars": "^3.0.0",
     "marked": "^0.3.3",
     "walk": "^2.3.9"
+  },
+  "bin": {
+    "styleguide": "index.js"
   }
 }
