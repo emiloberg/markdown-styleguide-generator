@@ -9,6 +9,9 @@ Issues | [![Issues](https://img.shields.io/github/issues/emiloberg/markdown-styl
 GitHub Version | [![GitHub version](https://badge.fury.io/gh/emiloberg%2Fmarkdown-styleguide-generator.svg)](http://badge.fury.io/gh/emiloberg%2Fmarkdown-styleguide-generator) | GitHub Followers | [![Followers](https://img.shields.io/github/followers/emiloberg.svg)](https://github.com/emiloberg/followers)
 NPM Version | [![npm version](https://badge.fury.io/js/markdown-styleguide-generator.svg)](http://badge.fury.io/js/markdown-styleguide-generator) | Dependencies | ![Dependencies](https://david-dm.org/emiloberg/markdown-styleguide-generator.svg)
 
+### Screenshot
+![Screenshot](https://raw.githubusercontent.com/emiloberg/markdown-styleguide-generator/master/docs/screenshot-sample.png)
+
 ### What is a living style guide?
 > To me, a style guide is a living document of [style] code, which details all the various elements and coded modules of your site or application. Beyond its use in consolidating the front-end code, it also documents the visual language, such as header styles and color palettes, used to create the site. This way, it’s a one-stop place for the entire team—from product owners and producers to designers and developers—to reference when discussing site changes and iterations. [...] - [Susan Robertson/A list apart](http://alistapart.com/article/creating-style-guides)
 
@@ -95,7 +98,7 @@ Example:
 
 This will be rendered as:
 
-(image)
+![Screenshot](https://raw.githubusercontent.com/emiloberg/markdown-styleguide-generator/master/docs/screenshot-rendered-glyphs.png)
 
 * `cd` to the web project (any folder containing css/scss/less files. The tool will search nested folders).
 * run `styleguide` to generate style guide.
