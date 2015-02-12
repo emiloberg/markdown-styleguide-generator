@@ -28,7 +28,9 @@ var options = {
 	excludeDirs: ['target', 'node_modules'],
 	fileExtensions: {
 		scss: true,
-		css: true
+		sass: true,
+		css: true,
+		less: true
 	},
 	walkerOptions: {
 		followLinks: false
@@ -110,25 +112,25 @@ try {
 	var templateSource = fs.readFileSync(options.templateFile, 'utf8');
 } catch(err) {
 	console.log(error('Could not read template file: ' + options.templateFile));
-	process.exit(1)
+	process.exit(1);
 }
 try {
 	var highlightSource = fs.readFileSync(path.join(options.highlightFolder, options.highlightStyle + '.css'), 'utf8');
 } catch(err) {
 	console.log(error('Could not read highlight file: ' + path.join(options.highlightFolder, options.highlightStyle + '.css')));
-	process.exit(1)
+	process.exit(1);
 }
 try {
 	var themeSource = fs.readFileSync(options.themeFile, 'utf8');
 } catch(err) {
 	console.log(error('Could not read theme file: ' + options.themeFile));
-	process.exit(1)
+	process.exit(1);
 }
 try {
 	var jqSource = fs.readFileSync(options.jqFile, 'utf8');
 } catch(err) {
 	console.log(error('Could not read jquery file: ' + options.jqFile));
-	process.exit(1)
+	process.exit(1);
 }
 
 
