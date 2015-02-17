@@ -265,3 +265,25 @@ The Javascript object which you may use in your template file looks like this:
 	]
 }
 ```
+
+## Run with gulp/grunt
+If you want to re-create the styleguide automagicalle every time a stylesheet file is changed, you can run it with your favorite task runner. One way of running it with gulp would be using gulp-shell to execute the shell command `styleguide` when a file is changed.
+
+Sample gulp script:
+```
+var gulp  = require('gulp');
+var shell = require('gulp-shell');
+var watch = require('gulp-watch');
+
+gulp.task('watch', function() {
+  gulp.watch('path/to/watch/for/changes/**/*.scss', ['makeStyleguide']);
+});
+
+gulp.task('makeStyleguide',
+  shell.task(
+    ['styleguide']
+  )
+);
+
+gulp.task('default', ['watch']);
+```
