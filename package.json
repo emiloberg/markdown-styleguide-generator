@@ -1,6 +1,6 @@
 {
   "name": "markdown-styleguide-generator",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Will search all your (s)css files for markdown and generate a single page html styleguide",
   "main": "index.js",
   "author": "Emil Oberg <emil.oberg@monator.com>",
