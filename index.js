@@ -35,6 +35,9 @@ var options = {
 	walkerOptions: {
 		followLinks: false
 	},
+	customVars: {
+		sampleVar: 'Hello from customVars!'
+	},
 	jqFile: path.join(moduleDir, '/template/jquery.js')
 };
 
@@ -246,7 +249,8 @@ function doTemplating(json) {
 function convertHTMLtoJSON(html) {
 	var masterData = {
 		sections: [],
-		menu: []
+		menu: [],
+		customVars: options.customVars
 	};
 
 	var $ = cheerio.load(html);

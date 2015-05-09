@@ -210,6 +210,12 @@ Easiest way to create a `.styleguide` file is to run `styleguide init` which wil
 	"fileExtensions": {}, // File extensions to search for style guide comments
 	                      // default: {scss: true, sass: true, css: true, less: true}
 	                      
+	"customVars": {}      // Holds an object with custom variables which will be
+	                      // available in the handlebars template. e.g: 
+	                      // customVars: { sampleVar: 'Hi there' }
+	                      // 'Hi there' will be printed if you request
+	                      // {{customVars/sampleVar}} in the handlebars template.
+	                      
 	                      // ADVANCED
 	                      
 	"walkerOptions": {
