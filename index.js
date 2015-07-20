@@ -279,7 +279,7 @@ function convertHTMLtoJSON(html) {
 			curSectionData.code = $section(this).html().replace(/^\s+|\s+$/g, '');
 		});
 
-		curSectionData.markup = hl.highlightAuto(curSectionData.code).value;
+		curSectionData.markup = hl.highlight("html", curSectionData.code).value;
 		curSectionData.id = makeUrlSafe(curSectionData.section  + '-' + curSectionData.heading);
 
 		$section('h1.main-section-' + sgUniqueIdentifier).remove();

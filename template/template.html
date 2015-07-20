@@ -1,44 +1,6 @@
+
 {{> theme}}
 {{> highlight}}
-{{> jquery}}
-
-<script>
-    var j = jQuery.noConflict(true);
-    j(function() {
-
-        // Show section in Styleguide
-        j('#styleguide .section[data-section="' + j('#styleguide-menu a').first().data('section') + '"]').show();
-
-        // Click on link with subheadings
-        j('#styleguide-menu .submenulink').click(function(event) {
-            event.preventDefault();
-            var jqCurSubmenu = j('[data-submenu="' + j(this).data('section') + '"]');
-            var isCurSubmenuOn = jqCurSubmenu.hasClass('on');
-            j('#styleguide-menu .on').removeClass('on');
-            if (!isCurSubmenuOn) {
-                jqCurSubmenu.addClass('on');
-                j(this).addClass('on');
-            }
-            showSection(j(this).data('section'));
-        });
-
-        // Click on link without subheadings
-        j('#styleguide-menu .sectionlink').click(function(event) {
-            event.preventDefault();
-            j('#styleguide-menu .on').removeClass('on');
-            j(this).addClass('on');
-            showSection(j(this).data('section'));
-        });
-
-        // Show/Hide sections
-        function showSection(section) {
-            j('#styleguide .section').hide();
-            var jqCurSections = j('#styleguide .section[data-section="' + section + '"]');
-            jqCurSections.show();
-        }
-    });
-</script>
-
 <div id="styleguide-menu">
 	<ul>
 	{{#each menu}}
@@ -76,12 +38,47 @@
 
             {{#if markup}}
                 <div class="markup hljs">
-<pre>
-{{{markup}}}
-</pre>
+                    <pre><code>{{{markup}}}</code></pre>
                 </div>
             {{/if}}
 
 		</div>
 	{{/each}}
 </div>
+{{> jquery}}
+<script>
+    var j = jQuery.noConflict(true);
+    j(function() {
+
+        // Show section in Styleguide
+        j('#styleguide .section[data-section="' + j('#styleguide-menu a').first().data('section') + '"]').show();
+
+        // Click on link with subheadings
+        j('#styleguide-menu .submenulink').click(function(event) {
+            event.preventDefault();
+            var jqCurSubmenu = j('[data-submenu="' + j(this).data('section') + '"]');
+            var isCurSubmenuOn = jqCurSubmenu.hasClass('on');
+            j('#styleguide-menu .on').removeClass('on');
+            if (!isCurSubmenuOn) {
+                jqCurSubmenu.addClass('on');
+                j(this).addClass('on');
+            }
+            showSection(j(this).data('section'));
+        });
+
+        // Click on link without subheadings
+        j('#styleguide-menu .sectionlink').click(function(event) {
+            event.preventDefault();
+            j('#styleguide-menu .on').removeClass('on');
+            j(this).addClass('on');
+            showSection(j(this).data('section'));
+        });
+
+        // Show/Hide sections
+        function showSection(section) {
+            j('#styleguide .section').hide();
+            var jqCurSections = j('#styleguide .section[data-section="' + section + '"]');
+            jqCurSections.show();
+        }
+    });
+</script>
