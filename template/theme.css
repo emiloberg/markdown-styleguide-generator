@@ -11,7 +11,7 @@
     box-shadow:         2px 2px 5px 0px rgba(50, 50, 50, 0.43);
 }
 
-#styleguide .result,
+#styleguide .result, 
 #styleguide .comment {
     padding: 1em;
     border: 1px solid #ddd;
@@ -33,20 +33,7 @@
 
 #styleguide .markup {
     border: 1px solid #ddd;
-    border-top: none;
-}
-
-#styleguide .markup pre {
-    overflow:  auto;
-    padding: 0;
-    width: 100%;
-}
-
-#styleguide .markup code {
-    display: block;
-    word-wrap: normal;
-    white-space: pre;
-    padding: 1em;
+    border-top: none;    
 }
 
 #styleguide code,
@@ -133,3 +120,4 @@
 #styleguide-menu a.on {
     background-color: rgba(0, 0, 0, 0.1);
 }
+

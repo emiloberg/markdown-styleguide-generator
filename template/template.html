@@ -1,95 +1,87 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>StyleGuide</title>
-    {{> theme}}
-    {{> highlight}}
-</head>
-<body>
-    <div id="styleguide-menu">
-    	<ul>
-    	{{#each menu}}
-    		<li>
-    			{{#if headings.0.name}}
-                    <a class="submenulink" href="#" data-section="{{name}}">{{name}}</a>
-                    <ul class="submenu" data-submenu="{{../name}}">
-                    {{#each headings}}
-                        <li><a href="#{{id}}">{{name}}</a></li>
-                    {{/each}}
-                    </ul>
-    			{{/if}}
-                {{#unless headings.0.name}}
-                    <a class="sectionlink" href="#" data-section="{{name}}">{{name}}</a>
-                {{/unless}}
-    		</li>
-    	{{/each}}
-    	</ul>
-    </div>
+{{> theme}}
+{{> highlight}}
+{{> jquery}}
 
-    <div id="styleguide">
-    	{{#each sections}}
-    		<div class="section" id="{{id}}" data-section="{{section}}" data-heading="{{heading}}">
+<script>
+    var j = jQuery.noConflict(true);
+    j(function() {
 
-                <div class="comment">
-                    <h1>{{section}}{{#if heading}}/{{heading}}{{/if}}</h1>
-                    {{{comment}}}
-                </div>
+        // Show section in Styleguide
+        j('#styleguide .section[data-section="' + j('#styleguide-menu a').first().data('section') + '"]').show();
 
-                {{#if code}}
-                    <div class="result">
-                        {{{code}}}
-                    </div>
-                {{/if}}
-
-                {{#if markup}}
-                    <div class="markup hljs">
-                        <pre><code>{{{markup}}}</code></pre>
-                    </div>
-                {{/if}}
-
-    		</div>
-    	{{/each}}
-    </div>
-    {{> jquery}}
-    <script>
-        var j = jQuery.noConflict(true);
-        j(function() {
-
-            // Show section in Styleguide
-            j('#styleguide .section[data-section="' + j('#styleguide-menu a').first().data('section') + '"]').show();
-
-            // Click on link with subheadings
-            j('#styleguide-menu .submenulink').click(function(event) {
-                event.preventDefault();
-                var jqCurSubmenu = j('[data-submenu="' + j(this).data('section') + '"]');
-                var isCurSubmenuOn = jqCurSubmenu.hasClass('on');
-                j('#styleguide-menu .on').removeClass('on');
-                if (!isCurSubmenuOn) {
-                    jqCurSubmenu.addClass('on');
-                    j(this).addClass('on');
-                }
-                showSection(j(this).data('section'));
-            });
-
-            // Click on link without subheadings
-            j('#styleguide-menu .sectionlink').click(function(event) {
-                event.preventDefault();
-                j('#styleguide-menu .on').removeClass('on');
+        // Click on link with subheadings
+        j('#styleguide-menu .submenulink').click(function(event) {
+            event.preventDefault();
+            var jqCurSubmenu = j('[data-submenu="' + j(this).data('section') + '"]');
+            var isCurSubmenuOn = jqCurSubmenu.hasClass('on');
+            j('#styleguide-menu .on').removeClass('on');
+            if (!isCurSubmenuOn) {
+                jqCurSubmenu.addClass('on');
                 j(this).addClass('on');
-                showSection(j(this).data('section'));
-            });
-
-            // Show/Hide sections
-            function showSection(section) {
-                j('#styleguide .section').hide();
-                var jqCurSections = j('#styleguide .section[data-section="' + section + '"]');
-                jqCurSections.show();
             }
+            showSection(j(this).data('section'));
         });
-    </script>
-</body>
-</html>
+
+        // Click on link without subheadings
+        j('#styleguide-menu .sectionlink').click(function(event) {
+            event.preventDefault();
+            j('#styleguide-menu .on').removeClass('on');
+            j(this).addClass('on');
+            showSection(j(this).data('section'));
+        });
+
+        // Show/Hide sections
+        function showSection(section) {
+            j('#styleguide .section').hide();
+            var jqCurSections = j('#styleguide .section[data-section="' + section + '"]');
+            jqCurSections.show();
+        }
+    });
+</script>
+
+<div id="styleguide-menu">
+	<ul>
+	{{#each menu}}
+		<li>
+			{{#if headings.0.name}}
+                <a class="submenulink" href="#" data-section="{{name}}">{{name}}</a>
+                <ul class="submenu" data-submenu="{{../name}}">
+                {{#each headings}}
+                    <li><a href="#{{id}}">{{name}}</a></li>
+                {{/each}}
+                </ul>
+			{{/if}}
+            {{#unless headings.0.name}}
+                <a class="sectionlink" href="#" data-section="{{name}}">{{name}}</a>
+            {{/unless}}
+		</li>
+	{{/each}}
+	</ul>
+</div>
+
+<div id="styleguide">
+	{{#each sections}}
+		<div class="section" id="{{id}}" data-section="{{section}}" data-heading="{{heading}}">
+
+            <div class="comment">
+                <h1>{{section}}{{#if heading}}/{{heading}}{{/if}}</h1>
+                {{{comment}}}
+            </div>
+
+            {{#if code}}
+                <div class="result">
+                    {{{code}}}
+                </div>
+            {{/if}}
+
+            {{#if markup}}
+                <div class="markup hljs">
+<pre>
+{{{markup}}}
+</pre>
+                </div>
+            {{/if}}
+
+		</div>
+	{{/each}}
+</div>
