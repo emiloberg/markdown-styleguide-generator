@@ -35,9 +35,6 @@ var options = {
 	walkerOptions: {
 		followLinks: false
 	},
-	markedOptions: {
-		gfm: true
-	},
 	customVars: {
 		sampleVar: 'Hello from customVars!'
 	},
@@ -144,7 +141,6 @@ try {
  * Custom renderer for marked.
  */
 var renderer = new marked.Renderer();
-
 renderer.heading = function (string, number) {
 	if (number === 1) {
 		var header = string.split('/', 2);
@@ -162,11 +158,10 @@ renderer.heading = function (string, number) {
 renderer.code = function (text, lang) {
 	return '\n<code class="sg-code-' + sgUniqueIdentifier + '">\n' + text + '\n</code>\n';
 };
-
-//Force marked to use custom renderer (preventing user hijacking)
-options.markedOptions.renderer = renderer;
-
-marked.setOptions(options.markedOptions);
+marked.setOptions({
+	renderer: renderer,
+	gfm: true
+});
 
 
 /**
